@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <br>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home'%}">Home</a>
+      </li>
+      <li class="breadcrumb-item active">Portfolio 2</li>
+    </ol>
+    <h1 class="mt-4 mb-3">My Events :
+        <small></small>
+      </h1>
+          <div class="card-group">
+              {% for event in events %}
+              <div class="raw">
+              <div class="card col-12 col-md-6 ">
+                <div class="card" style="width: 18rem;">
+                <img src="{{event.poster.url}}"class="card-img-top" alt="...">
+                <div class="card-body text-center">
+                  <h5 class="card-title">{{event.title}}</h5>
+                  <p class="card-text">Tickets Available : {{event.tickets_available}}</p>
+                  <small class="text-muted">{{event.release_date}}</small>
+                </div>
+                  <a href="{% url 'event-detail' event.id %}" method="POST" enctype="multipart/form-data" class="btn btn-outline-info btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        
+        </div>
+
+      {% for book in booking %}
+      <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Event Name</th>
+              <th scope="col">I have Reserved </th>
+              <th scope="col">Tickets left</th>
+              <th scope="col">Total of Tickets </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">{{book.event.title}}</th>
+              <td>{{book.number_of_tickets}}</td>
+              <td>{{book.event.tickets_available}}</td>
+              <td>{{book.event.capacity}}</td>
+            </tr>
+          </tbody>
+        </table>
+        {% endfor %}
+  </div>
+
+ 
+    
+  <br>
+  <br>
+  <br>
+  <!-- /.container -->
+  {% endblock %} 

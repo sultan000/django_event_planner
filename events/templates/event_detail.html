@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="card mb-3" style="max-width: 900px;">
+		<div class="row no-gutters">
+		  <div class="col-md-4">
+			<img src="{{event.poster.url}}" class="card-img" style="max-width: 400px;">
+		  </div>
+		  <div class="col-md-8">
+			<div class="card-body">
+			  <h5 class="card-title">{{event.title}}</h5>
+			  <p class="card-text">{{event.description}}</p>
+				<p class="card-text">{{event.release_date}}</p>
+				{% if request.user.number_of_tickets  > 0 and request.user.number_of_tickets != 0 %}
+				<p class="card-text"><small class="text-muted">SEATS : {{event.tickets_available}}</small></p>
+				{% endif %}
+				{% if event.tickets_available > 0 %}
+				<form action="{% url 'add-ticket' event.id %}" method="POST">
+					{% csrf_token %}
+					{{form | crispy}}
+					<input type="submit" value="Book now">
+				</form>
+
+				{% else %}
+				<div class="alert alert-primary" role="alert">
+						Fully Booked 
+					</div>
+					{% endif %}
+				{% if request.user == event.organizer%}
+			<a href="{% url 'event-update' event.id %}" method="POST" enctype="multipart/form-data" class="btn btn-outline-info btn-block">Update</a>
+			<a href="{% url 'delete-event' event.id %}" class="btn btn-outline-info btn-block">Delete</a>
+
+			{% for ticket in tickets %}
+			<ul class="list-group list-group-flush">
+					<li class="list-group-item">Guest Name: {{ticket.user}}</li>
+					<li class="list-group-item">Has Booked : {{ticket.number_of_tickets}}  tickets </li>
+				</ul>
+					{% endfor%}
+					{% endif %}
+			
+			<!-- <button id="event-{{event.id}}" class="btn btn-dark" onclick="ticket({{event.id}})"> -->
+				<i class="fa fa-ticket" aria-hidden="true"></i>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+{% endblock %} 
+
+<!-- <i class="fa fa-ticket" aria-hidden="true"></i>
+<script>
+	function ticket(id){
+		let button = "#event-" + id,
+		$.ajax(
+			{
+			type: "GET",
+			url: "/ticket/"+id+"/",
+			success: function(data){
+				if(data.booked){
+					$(button).addClass('text-warning')
+				}
+				else{
+					$(button).removeClass('text-warning')
+				}
+			},
+			error:function(){
+				console.log("something went wrong")
+			},
+		})
+
+
+	} -->
+
+</script>
